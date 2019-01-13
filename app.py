@@ -23,20 +23,22 @@ def sms_ahoy_reply():
     """Respond to incoming messages with a friendly SMS."""
     # Start our response
     resp = MessagingResponse()
+    if request.method == 'POST':
+        msg = request.form['Body']
+        joke = re.search(r'(.*)joke(.*)', msg, re.I)
+        greet = re.search(r'(.*)[hi|hey|hello](.*)', msg, re.I)
+        quote = re.search(r'(.*)quote(.*)', msg, re.I)
+        # joke = re.search(r'(.*)joke(.*)', msg, re.I)
 
-    msg = request.form['Body']
-    joke = re.search(r'(.*)joke(.*)', msg, re.I)
-    greet = re.search(r'(.*)[hi|hey|hello](.*)', msg, re.I)
-    quote = re.search(r'(.*)quote(.*)', msg, re.I)
-    # joke = re.search(r'(.*)joke(.*)', msg, re.I)
+        if joke: resp.message("I wanted to look for my watch but I couldn't find the time!")
+        elif quote: resp.message("A great player is the one who makes the game look easy!")
+        elif greet: resp.message("Greetings! I am your assistant!")
 
-    if joke: resp.message("I wanted to look for my watch but I couldn't find the time!")
-    elif quote: resp.message("A great player is the one who makes the game look easy!")
-    elif greet: resp.message("Greetings! I am your assistant!")
+        # Add a message
+        else: resp.message("Ahoy! You said, '" + msg + "'")
+        print(request.form)
 
-    # Add a message
-    else: resp.message("Ahoy! You said, '" + msg + "'")
-    print(request.form)
+    else: resp.message("Greetings! I am your assistant!") 
 
     return str(resp)
 
